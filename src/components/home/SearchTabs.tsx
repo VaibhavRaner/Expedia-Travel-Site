@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -22,7 +23,7 @@ const SearchTabs = () => {
   };
 
   return (
-    <Tabs defaultvalue="stays" className="w-full">
+    <Tabs defaultValue="stays" className="w-full">
       <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger value="stays"><Bed className="mr-2 h-4 w-4" /> Stays</TabsTrigger>
         <TabsTrigger value="flights"><Plane className="mr-2 h-4 w-4" /> Flights</TabsTrigger>
@@ -53,7 +54,7 @@ const SearchTabs = () => {
               {/* Date Range Picker */}
               <div>
                 <Label>Dates</Label>
-                <DatePickerWithRange setDates={setDates} />
+                <DatePickerWithRange setDates={setDates} dates={dates} />
               </div>
 
               {/* Guests Select */}

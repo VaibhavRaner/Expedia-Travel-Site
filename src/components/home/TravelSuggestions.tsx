@@ -1,9 +1,10 @@
+
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Plane, MapPin, Star } from 'lucide-react';
+import { Plane, MapPin, Star, Package as PackageIcon } from 'lucide-react';
 
 const TravelSuggestions = () => {
   return (
@@ -221,7 +222,7 @@ const TravelSuggestions = () => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
-                  <Package className="mr-2 w-5 h-5 text-expedia-blue" />
+                  <PackageIcon className="mr-2 w-5 h-5 text-expedia-blue" />
                   <h3 className="text-lg font-semibold text-expedia-darkGray">
                     City Explorer
                   </h3>
@@ -252,7 +253,7 @@ const TravelSuggestions = () => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
-                  <Package className="mr-2 w-5 h-5 text-expedia-blue" />
+                  <PackageIcon className="mr-2 w-5 h-5 text-expedia-blue" />
                   <h3 className="text-lg font-semibold text-expedia-darkGray">
                     Beach Getaway
                   </h3>
@@ -283,7 +284,7 @@ const TravelSuggestions = () => {
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center">
-                  <Package className="mr-2 w-5 h-5 text-expedia-blue" />
+                  <PackageIcon className="mr-2 w-5 h-5 text-expedia-blue" />
                   <h3 className="text-lg font-semibold text-expedia-darkGray">
                     Adventure Tour
                   </h3>
