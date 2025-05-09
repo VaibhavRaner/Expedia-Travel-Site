@@ -20,6 +20,7 @@ interface DatePickerWithRangeProps {
   setDates: (dates: DateRange | undefined) => void;
   dates?: DateRange;
   align?: "start" | "center" | "end";
+  numberOfMonths?: number; // Added prop for number of months
 }
 
 export function DatePickerWithRange({
@@ -27,6 +28,7 @@ export function DatePickerWithRange({
   setDates,
   dates,
   align = "start",
+  numberOfMonths = 1, // Default to 1 month view
 }: DatePickerWithRangeProps) {
   return (
     <div className={cn("grid gap-2", className)}>
@@ -62,7 +64,7 @@ export function DatePickerWithRange({
             defaultMonth={dates?.from}
             selected={dates}
             onSelect={setDates}
-            numberOfMonths={2}
+            numberOfMonths={numberOfMonths}
             className="pointer-events-auto"
           />
         </PopoverContent>

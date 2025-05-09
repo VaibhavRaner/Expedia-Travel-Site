@@ -107,7 +107,7 @@ const SearchTabs = () => {
               {/* Date Range Picker */}
               <div>
                 <Label>Dates</Label>
-                <DatePickerWithRange setDates={setDates} dates={dates} />
+                <DatePickerWithRange setDates={setDates} dates={dates} numberOfMonths={2} />
               </div>
 
               {/* Guests Select */}
@@ -172,10 +172,10 @@ const SearchTabs = () => {
                 </div>
               </div>
 
-              {/* Date Range Picker */}
+              {/* Date Range Picker - Now with single month */}
               <div>
                 <Label>Dates</Label>
-                <DatePickerWithRange setDates={setFlightDates} dates={flightDates} />
+                <DatePickerWithRange setDates={setFlightDates} dates={flightDates} numberOfMonths={1} />
               </div>
 
               {/* Passengers Select */}
@@ -239,10 +239,10 @@ const SearchTabs = () => {
                 </div>
               </div>
 
-              {/* Date Range Picker */}
+              {/* Date Range Picker - Now with single month */}
               <div>
                 <Label>Dates</Label>
-                <DatePickerWithRange setDates={setCarDates} dates={carDates} />
+                <DatePickerWithRange setDates={setCarDates} dates={carDates} numberOfMonths={1} />
               </div>
 
               {/* Car Type Select */}
@@ -310,10 +310,10 @@ const SearchTabs = () => {
                 </div>
               </div>
 
-              {/* Date Range Picker */}
+              {/* Date Range Picker - Now with single month */}
               <div>
                 <Label>Dates</Label>
-                <DatePickerWithRange setDates={setPackageDates} dates={packageDates} />
+                <DatePickerWithRange setDates={setPackageDates} dates={packageDates} numberOfMonths={1} />
               </div>
 
               {/* Travelers Select */}
