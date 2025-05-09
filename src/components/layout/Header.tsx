@@ -2,10 +2,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { User, Package, LogIn, Menu, X } from 'lucide-react';
+import { User, Package, LogIn, Menu, X, LogOut } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout } = useAuth();
 
   return (
     <header className="w-full bg-white shadow-sm py-4 sticky top-0 z-50">
@@ -42,17 +44,36 @@ const Header = () => {
             <Package className="w-5 h-5 mr-1" />
             <span>Trips</span>
           </Link>
-          <Link to="/login">
-            <Button variant="ghost" className="flex items-center">
-              <LogIn className="w-5 h-5 mr-1" />
-              <span>Sign in</span>
-            </Button>
-          </Link>
-          <Link to="/signup">
-            <Button className="bg-expedia-blue hover:bg-expedia-darkBlue">
-              Sign up
-            </Button>
-          </Link>
+          
+          {isAuthenticated ? (
+            <div className="flex items-center space-x-4">
+              <div className="text-sm font-medium text-expedia-blue">
+                Hello, {user?.firstName || user?.email.split('@')[0]}
+              </div>
+              <Button 
+                variant="ghost" 
+                className="flex items-center"
+                onClick={logout}
+              >
+                <LogOut className="w-5 h-5 mr-1" />
+                <span>Sign out</span>
+              </Button>
+            </div>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="ghost" className="flex items-center">
+                  <LogIn className="w-5 h-5 mr-1" />
+                  <span>Sign in</span>
+                </Button>
+              </Link>
+              <Link to="/signup">
+                <Button className="bg-expedia-blue hover:bg-expedia-darkBlue">
+                  Sign up
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -88,15 +109,33 @@ const Header = () => {
                 <Package className="w-5 h-5 mr-2" />
                 <span>Trips</span>
               </Link>
-              <Link to="/login" className="flex items-center text-gray-600 hover:text-expedia-blue transition-colors py-2">
-                <LogIn className="w-5 h-5 mr-2" />
-                <span>Sign in</span>
-              </Link>
-              <Link to="/signup" className="flex items-center">
-                <Button className="bg-expedia-blue hover:bg-expedia-darkBlue w-full mt-2">
-                  Sign up
-                </Button>
-              </Link>
+              
+              {isAuthenticated ? (
+                <>
+                  <div className="flex items-center text-sm font-medium text-expedia-blue py-2">
+                    Hello, {user?.firstName || user?.email.split('@')[0]}
+                  </div>
+                  <button 
+                    className="flex items-center text-gray-600 hover:text-expedia-blue transition-colors py-2 w-full"
+                    onClick={logout}
+                  >
+                    <LogOut className="w-5 h-5 mr-2" />
+                    <span>Sign out</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link to="/login" className="flex items-center text-gray-600 hover:text-expedia-blue transition-colors py-2">
+                    <LogIn className="w-5 h-5 mr-2" />
+                    <span>Sign in</span>
+                  </Link>
+                  <Link to="/signup" className="flex items-center">
+                    <Button className="bg-expedia-blue hover:bg-expedia-darkBlue w-full mt-2">
+                      Sign up
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         </div>

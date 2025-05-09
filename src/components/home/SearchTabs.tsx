@@ -1,315 +1,116 @@
-
 import React, { useState } from 'react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Card } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { DatePickerWithRange } from '@/components/ui/date-range-picker';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
-import { Calendar as CalendarIcon, MapPin, Bed, Airplane, Car, Package, Search } from 'lucide-react';
+import { Calendar as CalendarIcon, MapPin, Bed, Plane, Car, Package, Search } from 'lucide-react';
 
 const SearchTabs = () => {
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
-  
+  const [location, setLocation] = useState('');
+  const [dates, setDates] = useState<undefined | {
+    from: Date;
+    to?: Date | undefined;
+  }>();
+  const [guests, setGuests] = useState(1);
+
+  const handleSearch = () => {
+    alert(`Searching for ${guests} guests in ${location} from ${dates?.from ? format(dates.from, 'yyyy-MM-dd') : 'N/A'} to ${dates?.to ? format(dates.to, 'yyyy-MM-dd') : 'N/A'}`);
+  };
+
   return (
-    <div className="w-full">
-      <Tabs defaultValue="stays" className="w-full">
-        <TabsList className="grid grid-cols-4 md:w-[400px] bg-expedia-lightGray">
-          <TabsTrigger value="stays" className="flex items-center gap-1">
-            <Bed className="w-4 h-4" />
-            <span className="hidden sm:inline">Stays</span>
-          </TabsTrigger>
-          <TabsTrigger value="flights" className="flex items-center gap-1">
-            <Airplane className="w-4 h-4" />
-            <span className="hidden sm:inline">Flights</span>
-          </TabsTrigger>
-          <TabsTrigger value="cars" className="flex items-center gap-1">
-            <Car className="w-4 h-4" />
-            <span className="hidden sm:inline">Cars</span>
-          </TabsTrigger>
-          <TabsTrigger value="packages" className="flex items-center gap-1">
-            <Package className="w-4 h-4" />
-            <span className="hidden sm:inline">Packages</span>
-          </TabsTrigger>
-        </TabsList>
-        
-        {/* Stays Search */}
-        <TabsContent value="stays">
-          <Card className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="destination">Going to</Label>
+    <Tabs defaultvalue="stays" className="w-full">
+      <TabsList className="grid w-full grid-cols-5">
+        <TabsTrigger value="stays"><Bed className="mr-2 h-4 w-4" /> Stays</TabsTrigger>
+        <TabsTrigger value="flights"><Plane className="mr-2 h-4 w-4" /> Flights</TabsTrigger>
+        <TabsTrigger value="cars"><Car className="mr-2 h-4 w-4" /> Cars</TabsTrigger>
+        <TabsTrigger value="packages"><Package className="mr-2 h-4 w-4" /> Packages</TabsTrigger>
+        <TabsTrigger value="things-to-do">Things to do</TabsTrigger>
+      </TabsList>
+      <TabsContent value="stays">
+        <Card>
+          <CardContent className="p-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Location Input */}
+              <div>
+                <Label htmlFor="location">Location</Label>
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-3 h-4 w-4 text-expedia-gray" />
                   <Input
-                    id="destination"
-                    placeholder="Enter a destination"
-                    className="pl-10"
+                    type="text"
+                    id="location"
+                    placeholder="Where are you going?"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    className="pl-8"
                   />
+                  <MapPin className="absolute left-2.5 top-3.5 h-4 w-4 text-muted-foreground" />
                 </div>
               </div>
-              
-              <div className="space-y-2">
-                <Label>Check-in / Check-out</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className="w-full justify-start text-left font-normal h-10"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate && endDate ? (
-                        <>
-                          {format(startDate, "MMM d")} - {format(endDate, "MMM d, yyyy")}
-                        </>
-                      ) : (
-                        <span>Select dates</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="range"
-                      selected={{
-                        from: startDate || undefined,
-                        to: endDate || undefined,
-                      }}
-                      onSelect={(range) => {
-                        setStartDate(range?.from);
-                        setEndDate(range?.to);
-                      }}
-                      numberOfMonths={2}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+
+              {/* Date Range Picker */}
+              <div>
+                <Label>Dates</Label>
+                <DatePickerWithRange setDates={setDates} />
               </div>
-              
-              <div className="space-y-2">
-                <Label>Travelers</Label>
-                <Select defaultValue="2adults">
+
+              {/* Guests Select */}
+              <div>
+                <Label htmlFor="guests">Guests</Label>
+                <Select value={guests.toString()} onValueChange={value => setGuests(parseInt(value))}>
                   <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select travelers" />
+                    <SelectValue placeholder="1 guest" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="1adult">1 adult</SelectItem>
-                    <SelectItem value="2adults">2 adults</SelectItem>
-                    <SelectItem value="2adults1child">2 adults, 1 child</SelectItem>
-                    <SelectItem value="2adults2children">2 adults, 2 children</SelectItem>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
+                      <SelectItem key={num} value={num.toString()}>
+                        {num} guest{num > 1 ? 's' : ''}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
-            </div>
-            
-            <div className="flex justify-center mt-6">
-              <Button className="bg-expedia-blue hover:bg-expedia-darkBlue w-full md:w-auto px-8">
+
+              {/* Search Button */}
+              <Button onClick={handleSearch} className="bg-expedia-blue hover:bg-expedia-darkBlue">
                 <Search className="mr-2 h-4 w-4" />
                 Search
               </Button>
             </div>
-          </Card>
-        </TabsContent>
-        
-        {/* Flights Search */}
-        <TabsContent value="flights">
-          <Card className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="departure">From</Label>
-                <Input id="departure" placeholder="City or airport" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="arrival">To</Label>
-                <Input id="arrival" placeholder="City or airport" />
-              </div>
-              <div className="space-y-2">
-                <Label>Dates</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className="w-full justify-start text-left font-normal h-10"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate ? format(startDate, "MMM d, yyyy") : "Departure date"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={startDate}
-                      onSelect={setStartDate}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="space-y-2">
-                <Label>Travelers</Label>
-                <Select defaultValue="1adult">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select travelers" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1adult">1 adult</SelectItem>
-                    <SelectItem value="2adults">2 adults</SelectItem>
-                    <SelectItem value="2adults1child">2 adults, 1 child</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex justify-center mt-6">
-              <Button className="bg-expedia-blue hover:bg-expedia-darkBlue w-full md:w-auto px-8">
-                <Search className="mr-2 h-4 w-4" />
-                Search Flights
-              </Button>
-            </div>
-          </Card>
-        </TabsContent>
-        
-        {/* Cars Search */}
-        <TabsContent value="cars">
-          <Card className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="pickup">Pick-up location</Label>
-                <Input id="pickup" placeholder="City or airport" />
-              </div>
-              <div className="space-y-2">
-                <Label>Pick-up / Drop-off</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className="w-full justify-start text-left font-normal h-10"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate && endDate ? (
-                        <>
-                          {format(startDate, "MMM d")} - {format(endDate, "MMM d, yyyy")}
-                        </>
-                      ) : (
-                        <span>Select dates</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="range"
-                      selected={{
-                        from: startDate || undefined,
-                        to: endDate || undefined,
-                      }}
-                      onSelect={(range) => {
-                        setStartDate(range?.from);
-                        setEndDate(range?.to);
-                      }}
-                      numberOfMonths={2}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="space-y-2">
-                <Label>Car type</Label>
-                <Select defaultValue="standard">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select car type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="economy">Economy</SelectItem>
-                    <SelectItem value="compact">Compact</SelectItem>
-                    <SelectItem value="standard">Standard</SelectItem>
-                    <SelectItem value="suv">SUV</SelectItem>
-                    <SelectItem value="luxury">Luxury</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex justify-center mt-6">
-              <Button className="bg-expedia-blue hover:bg-expedia-darkBlue w-full md:w-auto px-8">
-                <Search className="mr-2 h-4 w-4" />
-                Search Cars
-              </Button>
-            </div>
-          </Card>
-        </TabsContent>
-        
-        {/* Packages Search */}
-        <TabsContent value="packages">
-          <Card className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="package-from">From</Label>
-                <Input id="package-from" placeholder="City or airport" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="package-to">To</Label>
-                <Input id="package-to" placeholder="Destination" />
-              </div>
-              <div className="space-y-2">
-                <Label>Dates</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant={"outline"}
-                      className="w-full justify-start text-left font-normal h-10"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {startDate && endDate ? (
-                        <>
-                          {format(startDate, "MMM d")} - {format(endDate, "MMM d, yyyy")}
-                        </>
-                      ) : (
-                        <span>Select dates</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="range"
-                      selected={{
-                        from: startDate || undefined,
-                        to: endDate || undefined,
-                      }}
-                      onSelect={(range) => {
-                        setStartDate(range?.from);
-                        setEndDate(range?.to);
-                      }}
-                      numberOfMonths={2}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="space-y-2">
-                <Label>Travelers</Label>
-                <Select defaultValue="2adults">
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Select travelers" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="1adult">1 adult</SelectItem>
-                    <SelectItem value="2adults">2 adults</SelectItem>
-                    <SelectItem value="2adults1child">2 adults, 1 child</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="flex justify-center mt-6">
-              <Button className="bg-expedia-blue hover:bg-expedia-darkBlue w-full md:w-auto px-8">
-                <Search className="mr-2 h-4 w-4" />
-                Search Packages
-              </Button>
-            </div>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="flights">
+        <Card>
+          <CardContent className="p-4">
+            Flights content
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="cars">
+        <Card>
+          <CardContent className="p-4">
+            Cars content
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="packages">
+        <Card>
+          <CardContent className="p-4">
+            Packages content
+          </CardContent>
+        </Card>
+      </TabsContent>
+      <TabsContent value="things-to-do">
+        <Card>
+          <CardContent className="p-4">
+            Things to do content
+          </CardContent>
+        </Card>
+      </TabsContent>
+    </Tabs>
   );
 };
 

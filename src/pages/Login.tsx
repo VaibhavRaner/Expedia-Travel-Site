@@ -8,27 +8,21 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { useToast } from '@/hooks/use-toast';
 import { LogIn } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const { login, isLoading } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    // Mock authentication
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Logged in successfully!",
-        description: "Welcome back to Expedia.",
-      });
-    }, 1500);
+    try {
+      await login(email, password);
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (

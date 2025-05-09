@@ -8,29 +8,23 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import { useToast } from '@/hooks/use-toast';
 import { User } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 const Signup = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
+  const { signup, isLoading } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    // Mock signup process
-    setTimeout(() => {
-      setIsLoading(false);
-      toast({
-        title: "Account created successfully!",
-        description: "Welcome to Expedia.",
-      });
-    }, 1500);
+    try {
+      await signup(email, password, firstName, lastName);
+    } catch (error) {
+      console.error("Signup error:", error);
+    }
   };
 
   return (
@@ -90,7 +84,7 @@ const Signup = () => {
                     required
                   />
                   <p className="text-xs text-gray-500">
-                    Password must be at least 8 characters long and include numbers and special characters.
+                    Password must be at least 6 characters long.
                   </p>
                 </div>
                 
